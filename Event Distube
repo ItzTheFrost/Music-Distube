@@ -1,40 +1,21 @@
-<const { SlashCommandBuilder} = require('@discordjs/builders')
-const Discord = require('discord.js')
-
-module.exports = {
-
-    data: new SlashCommandBuilder()
-
-    .setName('continue')
-    .setDescription('Continue the song'),
-
-  
-    async run(client, interaction){//💀
-
-      if(!interaction.member.voice.channel) return interaction.reply({ content: `You need to be on a voice channel`, ephemeral: true })
-
-    if(interaction.guild.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.me.voice.channel.id) return interaction.reply({ content: `You must be on the same voice channel as me`, ephemeral: true })
+client.distube.on("playSong", async (queue, song) => {
 
 
-const queue = client.distube.getQueue(interaction.member.voice.channel)
-if(!queue) return interaction.reply({content: "There are no songs in the list", ephemeral: true})
+    const re = new Discord.MessageEmbed()
+        .setTitle("<a:Disk:906030262767476776> Now playing ♪")
+        .setDescription(`Playing: **${song.name}**\nDuration: \`${song.formattedDuration}\``)
+        .setThumbnail(song.thumbnail)
+        .setColor("0x303136")
+    queue.textChannel.send({ embeds: [re] })
+});
 
+client.distube.on("addSong", async (queue, song) => {
 
-if(!queue.pause){
-interaction.reply({content: "The song is not paused", ephemeral: true})
-}
+    const asd = new Discord.MessageEmbed()
+        .setTitle("<a:Disk:906030262767476776> Song added to the queue ♪")
+        .setDescription(`Playing: **${song.name}**\nDuration: \`${song.formattedDuration}\``)
+        .setThumbnail(song.thumbnail)
+        .setColor("0x303136")
+    queue.textChannel.send({ embeds: [asd] })
 
-
-try{
-  client.distube.resume(interaction.member.voice.channel)
-  interaction.reply({content: "The song was continued", ephemeral: true})
-  return;
-} catch(e){
-  interaction.reply({content: `Whoops, there was a little mistake ${e}`, ephemeral: true})>
-}
-
-
-        
-
-    }
-}
+});
